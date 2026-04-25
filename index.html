@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Реконструкция Коломяжского проспекта</title>
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f1f3f5;
+      --text: #1f2328;
+      --muted: #5f6b7a;
+      --border: #e5e7eb;
+      --accent: #10a37f;
+      --accent-soft: #e8f7f3;
+      --blue-soft: #eef6ff;
+      --orange-soft: #fff5e8;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 18px;
+      --max-width: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    body.intro-lock {
+      overflow: hidden;
+    }
+
+    body.page-ready {
+      overflow: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247, 247, 248, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--text);
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav a {
+      padding: 9px 13px;
+      border-radius: 999px;
+      font-size: 14px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .nav a:hover {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 56px 0 28px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .card,
+    .hero-card,
+    .side-card,
+    .stat,
+    .timeline-item,
+    .budget-card,
+    .feature-card,
+    .summary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 30px;
+    }
+
+    .label {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 4.8vw, 50px);
+      line-height: 1.08;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-text {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 720px;
+      margin-bottom: 20px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      transition: 0.2s ease;
+      background: var(--surface);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .btn.primary:hover {
+      filter: brightness(0.98);
+    }
+
+    .btn.secondary:hover {
+      background: var(--surface-soft);
+    }
+
+    .hero-note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .side-card {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      justify-content: space-between;
+    }
+
+    .side-card h3 {
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .side-card p {
+      color: var(--muted);
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .section-head {
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(26px, 4vw, 36px);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      max-width: 860px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 22px;
+    }
+
+    .stat-number {
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .stat h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .stat p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .grid-2,
+    .features-grid,
+    .budget-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card,
+    .feature-card,
+    .budget-card {
+      padding: 24px;
+    }
+
+    .card h3,
+    .feature-card h3,
+    .budget-card h3,
+    .timeline-item h3 {
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .card p,
+    .feature-card p,
+    .budget-card p,
+    .timeline-item p {
+      color: var(--muted);
+    }
+
+    .card ul,
+    .feature-card ul,
+    .budget-card ul,
+    .timeline-item ul {
+      margin-left: 18px;
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline-item {
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .step {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: var(--blue-soft);
+      color: #2563eb;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .blue { background: var(--accent-soft); color: var(--accent); }
+    .green { background: var(--accent-soft); color: var(--accent); }
+    .orange { background: var(--accent-soft); color: var(--accent); }
+
+    .summary {
+      margin-top: 18px;
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      background: linear-gradient(180deg, #ffffff, #f8fcfb);
+    }
+
+    .summary h3 {
+      font-size: 23px;
+      margin-bottom: 8px;
+    }
+
+    .summary p {
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .summary-price {
+      font-size: clamp(30px, 5vw, 46px);
+      font-weight: 800;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .footer {
+      padding: 24px 0 42px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .intro-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #f7f7f8 0%, #eef6f3 100%);
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .intro-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .intro-inner {
+      text-align: center;
+      padding: 24px;
+      animation: introRise 1.1s ease forwards;
+    }
+
+    .intro-line {
+      width: 84px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 999px;
+      margin: 0 auto 22px;
+      transform: scaleX(0.2);
+      animation: lineGrow 1s ease forwards;
+    }
+
+    .intro-title {
+      font-size: clamp(28px, 5vw, 54px);
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .intro-subtitle {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .hero-card,
+    .side-card,
+    .section,
+    .footer {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    body.page-ready .hero-card,
+    body.page-ready .side-card,
+    body.page-ready .section,
+    body.page-ready .footer {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    body.page-ready .hero-card { transition-delay: 0.08s; }
+    body.page-ready .side-card { transition-delay: 0.18s; }
+    body.page-ready .section:nth-of-type(1) { transition-delay: 0.22s; }
+    body.page-ready .section:nth-of-type(2) { transition-delay: 0.28s; }
+    body.page-ready .section:nth-of-type(3) { transition-delay: 0.34s; }
+    body.page-ready .section:nth-of-type(4) { transition-delay: 0.40s; }
+    body.page-ready .section:nth-of-type(5) { transition-delay: 0.46s; }
+    body.page-ready .section:nth-of-type(6) { transition-delay: 0.52s; }
+    body.page-ready .section:nth-of-type(7) { transition-delay: 0.58s; }
+    body.page-ready .footer { transition-delay: 0.64s; }
+
+    .hero-card img {
+      transform: scale(1.04);
+      transition: transform 1.2s ease;
+    }
+
+    body.page-ready .hero-card img {
+      transform: scale(1);
+    }
+
+    @keyframes introRise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes lineGrow {
+      from { transform: scaleX(0.2); opacity: 0; }
+      to { transform: scaleX(1); opacity: 1; }
+    }
+
+    .image-toggle {
+      margin-bottom: 14px;
+    }
+
+    .toggle-buttons {
+      display: inline-flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 4px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .toggle-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .toggle-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .toggle-btn[data-mode="before"] { color: #6b7280; }
+    .toggle-btn[data-mode="before"].active { background: #e1e4e8; color: #374151; }
+    .toggle-btn[data-mode="after"] { color: #0f8f6f; }
+    .toggle-btn[data-mode="after"].active { background: var(--accent); color: #ffffff; }
+
+
+    .color-legend {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .color-legend-title {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .color-legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      display: inline-block;
+      flex: 0 0 16px;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+
+    .legend-white { background: #ffffff; }
+    .legend-gray { background: #9ca3af; }
+    .legend-red { background: #ef4444; }
+    .legend-green { background: #22c55e; }
+    .legend-blue { background: #3b82f6; }
+    .legend-yellow { background: #facc15; }
+
+    @media (max-width: 760px) {
+      .color-legend-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 1000px) {
+      .hero-grid,
+      .stats,
+      .grid-2,
+      .features-grid,
+      .budget-grid,
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 38px;
+      }
+
+      .hero-card,
+      .side-card,
+      .card,
+      .feature-card,
+      .budget-card,
+      .stat,
+      .timeline-item,
+      .summary {
+        padding: 18px;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .nav a {
+        font-size: 13px;
+        padding: 8px 11px;
+      }
+    }
+  </style>
+</head>
+<body class="intro-lock">
+  <div class="intro-screen" id="introScreen">
+    <div class="intro-inner">
+      <div class="intro-line"></div>
+      <div class="intro-title">Проект реконструкции<br>Коломяжского проспекта</div>
+         </div>
+  </div>
+
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">Проект <span>реконструкции</span> Коломяжского проспекта</div>
+      <nav class="nav">
+        <a href="#problem">Проблемы</a>
+        <a href="#solution">Решение</a>
+        <a href="#junctions">Перекрёстки</a>
+        <a href="#improvement">Благоустройство</a>
+        <a href="#budget">Смета</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <article class="hero-card" style="margin-bottom: 18px;">
+          <img src="assets/cover/cover.jpg" alt="Обложка проекта реконструкции Коломяжского проспекта" style="width:100%; border-radius:14px; border:1px solid var(--border); display:block; margin-bottom:18px;">
+          <h1>Реконструкция<br>Коломяжского проспекта<br>в Санкт-Петербурге</h1>
+          <p class="hero-text">
+            Цель проекта — снизить пробки, ускорить общественный транспорт, уменьшить шум,
+            повысить безопасность и сделать улицу более удобной для жителей, пешеходов и велосипедистов.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#solution">Смотреть проект</a>
+            <a class="btn secondary" href="#budget">Открыть смету</a>
+          </div>
+          <p class="hero-note">
+            Главная идея проекта: не просто расширять дорогу для машин, а сделать проспект более удобным для всех участников движения.
+          </p>
+        </article>
+
+        <aside class="side-card">
+          <div class="label">Главное решение</div>
+          <h3>Приоритет общественного транспорта</h3>
+          <p>
+            Центральным элементом проекта становится обособленная двусторонняя автобусная полоса,
+            проходящая по центру Коломяжского проспекта.
+          </p>
+          <p>
+            Такая полоса позволит автобусам не стоять в общей пробке и быстрее доставлять людей к метро и в центр города.
+          </p>
+          <p>
+            Основная идея решения заключается в том, чтобы сделать общественный транспорт более быстрым, удобным и предсказуемым,
+            а значит — более привлекательным по сравнению с личным автомобилем.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="relevance">
+      <div class="container">
+        <div class="section-head">
+          <h2>Актуальность проекта</h2>
+          <p>
+            В современных крупных городах проблема перегруженности улиц становится всё более значимой. Коломяжский проспект
+            является примером магистрали, где одновременно наблюдаются транспортные заторы, высокий уровень шума и недостаток
+            комфортной городской среды.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <span class="badge blue">Транспорт</span>
+            <h3>Рост автомобильного трафика</h3>
+            <p>
+              С увеличением числа автомобилей существующая инфраструктура перестаёт справляться с нагрузкой,
+              что приводит к постоянным пробкам и снижению скорости движения.
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="badge orange">Городская среда</span>
+            <h3>Снижение качества жизни</h3>
+            <p>
+              Шум, загрязнение воздуха и отсутствие удобных общественных пространств негативно влияют на жителей,
+              особенно вблизи крупных транспортных узлов.
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="badge green">Общественный транспорт</span>
+            <h3>Неэффективность системы</h3>
+            <p>
+              Отсутствие приоритета для автобусов делает их медленными и неудобными,
+              что снижает их привлекательность по сравнению с личным транспортом.
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="badge blue">Необходимость изменений</span>
+            <h3>Переход к современным решениям</h3>
+            <p>
+              Города переходят к приоритету общественного транспорта, озеленению и созданию комфортной среды.
+              Данный проект отражает эти современные тенденции.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="goals">
+      <div class="container">
+        <div class="section-head">
+          <h2>Цель и задачи проекта</h2>
+          <p>
+            Проект направлен на комплексное улучшение транспортной ситуации и городской среды на Коломяжском проспекте.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <span class="badge blue">Цель проекта</span>
+            <h3>Повышение эффективности и комфортности улицы</h3>
+            <p>
+              Основная цель — снизить транспортную нагрузку, ускорить общественный транспорт,
+              повысить безопасность и улучшить качество городской среды для жителей.
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="badge green">Задачи проекта</span>
+            <h3>Основные направления работы</h3>
+            <ul>
+              <li>Снижение пробок за счёт перераспределения транспортных потоков.</li>
+              <li>Создание выделенной полосы для общественного транспорта.</li>
+              <li>Повышение безопасности перекрёстков и пешеходных переходов.</li>
+              <li>Развитие велоинфраструктуры вдоль проспекта.</li>
+              <li>Озеленение и улучшение экологической ситуации.</li>
+              <li>Создание комфортных общественных пространств у метро «Пионерская».</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="problem">
+      <div class="container">
+        <div class="section-head">
+          <h2>Почему выбран Коломяжский проспект</h2>
+          <p>
+            Эта улица была выбрана для проекта, потому что на ней одновременно наблюдаются транспортные, экологические и пешеходные проблемы.
+          </p>
+        </div>
+
+        <div class="stats">
+          <article class="stat">
+            <div class="stat-number">1</div>
+            <h3>Большие пробки</h3>
+            <p>
+              Проспект соединяет крупные жилые районы с центром города и принимает потоки машин с нескольких важных улиц.
+            </p>
+          </article>
+
+          <article class="stat">
+            <div class="stat-number">2</div>
+            <h3>Нет выделенных полос</h3>
+            <p>
+              Автобусы стоят в общем потоке автомобилей, особенно перед подъездом к станции метро «Пионерская».
+            </p>
+          </article>
+
+          <article class="stat">
+            <div class="stat-number">3</div>
+            <h3>Высокий уровень шума</h3>
+            <p>
+              Постоянные заторы и большое количество транспорта ухудшают условия жизни людей, которые живут рядом с проспектом.
+            </p>
+          </article>
+
+          <article class="stat">
+            <div class="stat-number">4</div>
+            <h3>Недостаток благоустройства</h3>
+            <p>
+              Улице не хватает зелени, удобных общественных зон и современной велоинфраструктуры.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="solution">
+      <div class="container">
+        <div class="section-head">
+          <h2>Основное решение проекта</h2>
+          <p>
+            Проект включает организацию транспортного коридора для автобусов, улучшение перекрёстков,
+            создание велодорожки, озеленение и благоустройство территории у метро «Пионерская».
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <span class="badge blue">Транспортный коридор</span>
+            <h3>Выделенная автобусная полоса</h3>
+            <p>
+              По центру проспекта предлагается создать двустороннюю выделенную автобусную полосу от пересечения с Парашютной улицей
+              до путепровода над железнодорожными путями.
+            </p>
+            <ul>
+              <li>Автобусы смогут двигаться быстрее и стабильнее.</li>
+              <li>Общественный транспорт станет удобнее для жителей.</li>
+              <li>Снизится зависимость от личных автомобилей.</li>
+              <li>Уменьшится перегрузка основной проезжей части.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <span class="badge orange">Реализация полосы</span>
+            <h3>Обособление и остановки-островки</h3>
+            <p>
+              Полоса будет физически отделена от основной дороги поребриком. Остановки предлагается разместить по центру улицы на островках безопасности.
+            </p>
+            <ul>
+              <li>Автомобили не смогут выезжать на выделенную часть.</li>
+              <li>Пассажирам будет удобно пересаживаться между маршрутами.</li>
+              <li>Переход к остановкам будет организован через пешеходные переходы.</li>
+              <li>Система повысит надёжность автобусного движения.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="final-view">
+      <div class="container">
+        <div class="section-head">
+          <h2 style="color: var(--accent); font-weight: 800;">Общий вид реконструированной улицы</h2>
+          <p>
+            Ниже представлено визуальное представление того, как будет выглядеть Коломяжский проспект после реализации проекта.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="image-toggle">
+            <div class="toggle-buttons">
+              <button class="toggle-btn active" type="button" data-target="img-final-view" data-mode="before">Было</button>
+              <button class="toggle-btn" type="button" data-target="img-final-view" data-mode="after">Стало</button>
+            </div>
+            <img
+              id="img-final-view"
+              class="zoomable"
+              src="assets/final/final-before.jpg"
+              data-before="assets/final/final-before.jpg"
+              data-after="assets/final/final-after.jpg"
+              alt="Общий вид реконструированной улицы"
+              style="width:100%; max-width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border); cursor: zoom-in;"
+            >
+
+          <div class="color-legend">
+            <div class="color-legend-title">Условные обозначения цветов на схеме:</div>
+            <div class="color-legend-grid">
+              <div class="legend-item"><span class="legend-color legend-white"></span>Белый — дорога</div>
+              <div class="legend-item"><span class="legend-color legend-gray"></span>Серый — здания</div>
+              <div class="legend-item"><span class="legend-color legend-red"></span>Красный — выделенная полоса для общественного транспорта</div>
+              <div class="legend-item"><span class="legend-color legend-green"></span>Зелёный — озеленение и парковые зоны</div>
+              <div class="legend-item"><span class="legend-color legend-blue"></span>Синий — пешеходные переходы</div>
+              <div class="legend-item"><span class="legend-color legend-yellow"></span>Жёлтый — трамвайные пути</div>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="junctions">
+      <div class="container">
+        <div class="section-head">
+          <h2>Предлагаемые изменения на перекрёстках</h2>
+          <p>
+            Каждый перекрёсток имеет свои особенности, поэтому для них предложены разные решения.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item">
+            <div class="step">1</div>
+            <div>
+              <h3>Парашютная улица — Коломяжский проспект</h3>
+              <div class="image-toggle">
+                <div class="toggle-buttons">
+                  <button class="toggle-btn active" type="button" data-target="img-parashyutnaya" data-mode="before">Было</button>
+                  <button class="toggle-btn" type="button" data-target="img-parashyutnaya" data-mode="after">Стало</button>
+                </div>
+                <img id="img-parashyutnaya" class="zoomable" src="assets/intersections/01-parashyutnaya-before.jpg" data-before="assets/intersections/01-parashyutnaya-before.jpg" data-after="assets/intersections/01-parashyutnaya-after.jpg" alt="План перекрёстка Парашютная улица — Коломяжский проспект" style="width:100%; max-width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border); margin-bottom:14px; cursor: zoom-in;">
+              </div>
+              <p>
+                Здесь предлагается разделить транспортные потоки, чтобы уменьшить заторы на подъезде к проспекту.
+              </p>
+              <ul>
+                <li>Конец проезда делится на две части по две полосы.</li>
+                <li>Часть полос направляется в сторону Парашютной улицы и Каменки.</li>
+                <li>Остальные полосы связываются с Коломяжским проспектом в сторону Пионерской.</li>
+                <li>Также пересматриваются светофорные фазы.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <div class="step">2</div>
+            <div>
+              <h3>Проспект Королёва — Коломяжский проспект</h3>
+              <div class="image-toggle">
+                <div class="toggle-buttons">
+                  <button class="toggle-btn active" type="button" data-target="img-koroleva" data-mode="before">Было</button>
+                  <button class="toggle-btn" type="button" data-target="img-koroleva" data-mode="after">Стало</button>
+                </div>
+                <img id="img-koroleva" class="zoomable" src="assets/intersections/02-koroleva-before.jpg" data-before="assets/intersections/02-koroleva-before.jpg" data-after="assets/intersections/02-koroleva-after.jpg" alt="План перекрёстка Проспект Королёва — Коломяжский проспект" style="width:100%; max-width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border); margin-bottom:14px; cursor: zoom-in;">
+              </div>
+              <p>
+                На этом перекрёстке предлагаются точечные меры безопасности и приоритет для общественного транспорта.
+              </p>
+              <ul>
+                <li>Создание островка безопасности на пешеходном переходе.</li>
+                <li>Корректировка работы светофора.</li>
+                <li>Повышение безопасности для пешеходов.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <div class="step">3</div>
+            <div>
+              <h3>Проспект Испытателей — Коломяжский проспект</h3>
+              <div class="image-toggle">
+                <div class="toggle-buttons">
+                  <button class="toggle-btn active" type="button" data-target="img-ispytateley" data-mode="before">Было</button>
+                  <button class="toggle-btn" type="button" data-target="img-ispytateley" data-mode="after">Стало</button>
+                </div>
+                <img id="img-ispytateley" class="zoomable" src="assets/intersections/03-ispytateley-before.jpg" data-before="assets/intersections/03-ispytateley-before.jpg" data-after="assets/intersections/03-ispytateley-after.jpg" alt="План перекрёстка Проспект Испытателей — Коломяжский проспект" style="width:100%; max-width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border); margin-bottom:14px; cursor: zoom-in;">
+              </div>
+              <p>
+                Это самый загруженный перекрёсток. Здесь предлагается самая серьёзная перестройка — создание четырёхполосного кругового движения.
+              </p>
+              <ul>
+                <li>Круг поможет снизить пробки и сделать движение более упорядоченным.</li>
+                <li>Сократится длина пешеходных переходов.</li>
+                <li>Появится более удобная пересадка между автобусами, трамваями и метро.</li>
+                <li>Пространство станет более организованным.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <div class="step">4</div>
+            <div>
+              <h3>Богатырский проспект — Коломяжский проспект</h3>
+              <div class="image-toggle">
+                <div class="toggle-buttons">
+                  <button class="toggle-btn active" type="button" data-target="img-bogatyrsky" data-mode="before">Было</button>
+                  <button class="toggle-btn" type="button" data-target="img-bogatyrsky" data-mode="after">Стало</button>
+                </div>
+                <img id="img-bogatyrsky" class="zoomable" src="assets/intersections/04-bogatyrsky-before.jpg" data-before="assets/intersections/04-bogatyrsky-before.jpg" data-after="assets/intersections/04-bogatyrsky-after.jpg" alt="План перекрёстка Богатырский проспект — Коломяжский проспект" style="width:100%; max-width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border); margin-bottom:14px; cursor: zoom-in;">
+              </div>
+              <p>
+                Здесь предлагается использовать адаптивные фазы светофора, потому что места для кругового движения недостаточно.
+              </p>
+              <ul>
+                <li>Светофор будет анализировать транспортные потоки.</li>
+                <li>Более загруженные направления будут получать приоритет.</li>
+                <li>Это повысит эффективность проезда перекрёстка.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="improvement">
+      <div class="container">
+        <div class="section-head">
+          <h2>Озеленение и благоустройство</h2>
+          <p>
+            Важной частью проекта является не только транспорт, но и улучшение внешнего вида улицы и удобства для жителей.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <span class="badge green">Озеленение</span>
+            <h3>Дополнительные деревья</h3>
+            <p>
+              Посадка деревьев вдоль проспекта поможет уменьшить шум, сделать улицу более зелёной и улучшить её внешний вид.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <span class="badge blue">Велодвижение</span>
+            <h3>Велодорожка вдоль проспекта</h3>
+            <p>
+              Непрерывная велодорожка сделает поездки на велосипеде удобнее и поможет частично разгрузить тротуары и дорогу.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <span class="badge orange">Общественные зоны</span>
+            <h3>Парк у метро «Пионерская»</h3>
+            <p>
+              На месте неэффективно используемых пространств предлагается создать парк с аллеями, детскими и спортивными площадками.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <span class="badge green">Эстетика</span>
+            <h3>Упорядочивание городской среды</h3>
+            <p>
+              Также предлагается убрать ЛЭП под землю и организовать централизованные места для торговли, чтобы пространство выглядело аккуратнее.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="budget">
+      <div class="container">
+        <div class="section-head">
+          <h2>4.1 Стоимость проекта</h2>
+          <p>
+            Рассчитаем ориентировочную стоимость реализации проекта реконструкции Коломяжского проспекта
+            с учётом основных строительных и благоустроительных работ.
+          </p>
+        </div>
+
+        <div class="budget-grid">
+          <article class="budget-card">
+            <span class="badge blue">Транспорт</span>
+            <h3>Выделенная автобусная полоса</h3>
+            <p>
+              Строительство выделенной автобусной полосы включает переустройство дорожного полотна,
+              частичный перенос инженерных коммуникаций, нанесение специальной разметки,
+              установку дорожных знаков, ограждений и элементов безопасности.
+            </p>
+            <ul>
+              <li>Средняя стоимость: 90 млн руб./км</li>
+              <li>Длина участка: 2,5 км</li>
+              <li>Стоимость: 225 млн рублей</li>
+            </ul>
+          </article>
+
+          <article class="budget-card">
+            <span class="badge orange">Крупный узел</span>
+            <h3>Круговой четырёхполосный перекрёсток</h3>
+            <p>
+              Реконструкция существующего сложного перекрёстка с устройством кругового четырёхполосного
+              движения включает перепланировку проезжей части, установку новых бордюров,
+              светофорных объектов, устройство ливневой канализации и перенос коммуникаций.
+            </p>
+            <ul>
+              <li>Ориентировочная стоимость: 350 млн рублей</li>
+            </ul>
+          </article>
+
+          <article class="budget-card">
+            <span class="badge green">Благоустройство</span>
+            <h3>Парковая зона площадью 1,8 га</h3>
+            <p>
+              Создание новой зелёной зоны возле остановок и оживлённых участков магистрали
+              включает устройство дорожек, установку скамеек, освещения, урн,
+              озеленение и общее благоустройство территории.
+            </p>
+            <ul>
+              <li>Площадь: 1,8 га</li>
+              <li>Стоимость: 180 млн рублей</li>
+            </ul>
+          </article>
+
+          <article class="budget-card">
+            <span class="badge blue">Велоинфраструктура</span>
+            <h3>Велодорожка</h3>
+            <p>
+              Строительство велодорожки протяжённостью 2,5 километра включает подготовку основания,
+              устройство покрытия, нанесение разметки и безопасное отделение от автомобильного потока.
+            </p>
+            <ul>
+              <li>Протяжённость: 2,5 км</li>
+              <li>Стоимость: 75 млн рублей</li>
+            </ul>
+          </article>
+
+          <article class="budget-card">
+            <span class="badge green">Экология</span>
+            <h3>Озеленение</h3>
+            <p>
+              Дополнительное озеленение территории предусматривает посадку деревьев, кустарников
+              и декоративных растений вдоль проспекта и на прилегающих участках.
+            </p>
+            <ul>
+              <li>Стоимость: 40 млн рублей</li>
+            </ul>
+          </article>
+
+          <article class="budget-card">
+            <span class="badge orange">Итог</span>
+            <h3>Общий расчёт</h3>
+            <ul>
+              <li>Выделенная автобусная полоса — 225 млн руб.</li>
+              <li>Круговой четырёхполосный перекрёсток — 350 млн руб.</li>
+              <li>Парк площадью 1,8 га — 180 млн руб.</li>
+              <li>Велодорожка — 75 млн руб.</li>
+              <li>Озеленение — 40 млн руб.</li>
+              <li>Общая сумма — 870 млн руб.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="summary">
+          <div>
+            <h3>Округлённая стоимость</h3>
+            <p>
+              При реализации подобных проектов необходимо учитывать возможные непредвиденные расходы,
+              технический контроль, подготовку проектной документации и дополнительные организационные затраты.
+              Поэтому итоговую стоимость проекта разумно округлить до 950 млн рублей.
+            </p>
+          </div>
+          <div class="summary-price">950 млн ₽</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+         </div>
+  </footer>
+
+  <div id="imgModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.86); z-index:9999; align-items:center; justify-content:center; padding:24px;">
+    <button id="closeModalBtn" aria-label="Закрыть изображение" style="position:absolute; top:20px; right:20px; width:44px; height:44px; border:none; border-radius:999px; background:rgba(255,255,255,0.92); color:#111827; font-size:28px; line-height:1; cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,0.25);">×</button>
+    <img id="modalImg" src="" style="max-width:96vw; max-height:94vh; width:auto; height:auto; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.5); display:block;">
+  </div>
+
+  <script>
+    const modal = document.getElementById('imgModal');
+    const modalImg = document.getElementById('modalImg');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    document.querySelectorAll('.zoomable').forEach(img => {
+      img.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        modalImg.src = img.src;
+      });
+    });
+
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const mode = btn.dataset.mode;
+        const image = document.getElementById(targetId);
+        if (!image) return;
+
+        image.src = mode === 'after' ? image.dataset.after : image.dataset.before;
+
+        const buttons = btn.parentElement.querySelectorAll('.toggle-btn');
+        buttons.forEach(item => item.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    function closeImageModal() {
+      modal.style.display = 'none';
+      modalImg.src = '';
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeImageModal();
+    });
+
+    closeModalBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeImageModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        closeImageModal();
+      }
+    });
+  </script>
+
+  <script>
+    window.addEventListener('load', () => {
+      const introScreen = document.getElementById('introScreen');
+      setTimeout(() => {
+        introScreen.classList.add('hidden');
+        document.body.classList.remove('intro-lock');
+        document.body.classList.add('page-ready');
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
